@@ -198,7 +198,7 @@ elif selected_page == "BizBot":
         )
         generated_text = response.choices[0].message.content
 
-        return generated_text
+        return generated_text 
     
     st.header("BizBot - Your AI Business Assistant")
 
