@@ -17,7 +17,7 @@ def investor_profile():
     interests = st.text_input("Interested Industries (comma-separated)")
     contact = st.text_input("Contact Information")
     if st.button("Submit"):
-        interests_list = [interest.strip() for interest in interests.split(",")]
+        interests_list = [interest.strip().lower() for interest in interests.split(",")]
         for interest in interests_list:
             c.execute("INSERT INTO investors VALUES (?, ?, ?, ?, ?)",
                       (name, description, funding, interest, contact))
@@ -33,8 +33,8 @@ def startup_founder():
         industries.add(row[0])
     selected_industry = st.selectbox("Select an Industry", list(industries))
     if st.button("Find Investors"):
-        # Fetch investors with similar interests from the database
-        c.execute("SELECT * FROM investors WHERE industry = ?", (selected_industry,))
+        # Fetch investors with similar interests from the database (case-insensitive)
+        c.execute("SELECT * FROM investors WHERE LOWER(industry) = LOWER(?)", (selected_industry,))
         results = c.fetchall()
         st.subheader("Matching Investors:")
         for result in results:
