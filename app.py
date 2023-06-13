@@ -2,6 +2,9 @@ import streamlit as st
 import yfinance as yf
 import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error, r2_score
 
 # Define the different pages
 pages = {
@@ -44,16 +47,48 @@ elif selected_page == "Stock Market Predictions Tool":
         
         # Prepare the data for prediction
         data = data.reset_index()
+        data['Date'] = pd.to_datetime(data['Date'])
+        data['Date'] = data['Date'].map(lambda x: x.toordinal())
         
-        # Display the stock data
+        # Split the data into training and testing sets
+        X = data[['Date']].values
+        y = data['Close'].values
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+        
+        # Train the linear regression model
+        model = LinearRegression()
+        model.fit(X_train, y_train)
+        
+        # Make predictions on the test set
+        y_pred = model.predict(X_test)
+        
+        # Calculate evaluation metrics
+        mse = mean_squared_error(y_test, y_pred)
+        r2 = r2_score(y_test, y_pred)
+        
+        # Create a DataFrame for predicted values
+        predictions = pd.DataFrame({'Date': data['Date'].values[X_train.shape[0]:], 'Close': y_pred})
+        
+        # Create a combined DataFrame for plotting
+        plot_data = pd.concat([data, predictions], ignore_index=True)
+        
+        # Generate the graph
+        plt.figure(figsize=(10, 6))
+        plt.plot(plot_data['Date'], plot_data['Close'], color='blue', label='Actual')
+        plt.plot(plot_data['Date'], plot_data['Close'].shift(-X_train.shape[0]), color='orange', linestyle='--', label='Predicted')
+        plt.xlabel('Date')
+        plt.ylabel('Close Price')
+        plt.title('Stock Performance and Predictions')
+        plt.legend()
+        plt.grid(True)
+        
+        # Display the graph
+        st.pyplot(plt)
+        
+        # Display the results
         st.write("Stock Data:")
         st.write(data)
-        
-        # Plot the stock performance
-        fig, ax = plt.subplots()
-        ax.plot(data['Date'], data['Close'], label='Close Price')
-        ax.set_xlabel('Date')
-        ax.set_ylabel('Price')
-        ax.set_title('Stock Performance')
-        ax.legend()
-        st.pyplot(fig)
+        st.write("Predicted Close Prices:")
+        st.write(predictions)
+        st.write("Mean Squared Error:", mse)
+        st.write("R^2 Score:", r2)
