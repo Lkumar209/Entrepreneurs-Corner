@@ -189,14 +189,14 @@ if selected_page == "BizMatch":
 
 
 elif selected_page == "BizBot":
-    openai.api_key = "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"
+    openai.api_key = "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"
 
     def generate_response(prompt):
         response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[{"role": "user", "content": prompt}]
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
         )
-        generated_text = response.choices[0].text
+        generated_text = response.choices[0].message.content
 
         return generated_text
     
