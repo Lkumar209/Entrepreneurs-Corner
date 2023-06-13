@@ -1,5 +1,5 @@
 import streamlit as st
-from streamlit_option_menu import option_menu
+import yfinance as yf
 
 # Define the different pages
 pages = {
@@ -13,7 +13,7 @@ pages = {
 st.title("Entrepreneurship Corner")
 
 # Create a horizontal option menu for navigation
-selected_page = option_menu("Select a feature:", list(pages.keys()))
+selected_page = st.sidebar.selectbox("Select a feature:", list(pages.keys()))
 
 # Render the selected page
 if selected_page == "Startup Matchmaker":
@@ -34,4 +34,9 @@ elif selected_page == "Business Idea Generator":
 elif selected_page == "Stock Market Predictions Tool":
     # Render the Stock Market Predictions Tool page
     st.title("Stock Market Predictions Tool")
-    # Add your code for the Stock Market Predictions Tool page here
+    symbol = st.text_input("Enter a stock symbol (e.g., AAPL):")
+    if symbol:
+        stock = yf.Ticker(symbol)
+        data = stock.history(period="1y")
+        st.write("Stock Data:")
+        st.write(data)
