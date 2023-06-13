@@ -6,25 +6,31 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
 from streamlit_option_menu import option_menu
+from streamlit_chat import message
+import openai
 
-# Define the different pages
-pages = {
-    "Startup Matchmaker": "matchmaker",
-    "Entrepreneurship Mentor Chatbot": "chatbot",
-    "Business Idea Generator": "idea_generator",
-    "Stock Market Predictions Tool": "stock_predictions"
-}
 
-# Add a title for the navigation bar
-st.title("Entrepreneurship Corner")
+st.markdown(
+    """
+    <style>
+    .block-container {
+        text-align: center;
 
-# Create a horizontal option menu for navigation
- 
+    }
 
+    .title {
+        align-self: flex-start;
+     </style>
+    """,
+    unsafe_allow_html=True
+)
+
+logo = "eclogo.png"
+st.image(logo, use_column_width=True)
 
 selected_page = option_menu(
     menu_title=None,
-    options=["Startup Matchmaker", "Entrepreneurship Mentor Chatbot", "Business Idea Generator", "Stock Market Predictions Tool"],
+    options=["BizMatch", "BizBot", "Idea Oasis", "EnvisionX"],
     icons=["map", "person-circle", "info", "geo"],
     menu_icon="cast",
     default_index=0,
@@ -32,24 +38,59 @@ selected_page = option_menu(
 )
 
 
-
 # Render the selected page
-if selected_page == "Startup Matchmaker":
+if selected_page == "BizMatch":
     # Render the Startup Matchmaker page
     st.title("Startup Matchmaker")
     # Add your code for the Startup Matchmaker page here
 
-elif selected_page == "Entrepreneurship Mentor Chatbot":
-    # Render the Entrepreneurship Mentor Chatbot page
-    st.title("Entrepreneurship Mentor Chatbot")
-    # Add your code for the Entrepreneurship Mentor Chatbot page here
+elif selected_page == "BizBot":
+    openai.api_key = "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"
 
-elif selected_page == "Business Idea Generator":
+    def generate_response(prompt):
+        completions = openai.Completion.create( 
+            engine = "text-davinci-003",
+            prompt =prompt,
+            max_tokens = 1024,
+            n = 1,
+            stop = None,
+            temperature = 0.5,
+        )
+        message = completions.choices[0].text
+        return message
+    
+    st.header("BizBot - Your AI Business Assistant")
+
+    if 'generated' not in st.session_state:
+        st.session_state['generated'] = []
+
+    if 'past' not in st.session_state: 
+        st.session_state['past'] = []
+    
+    def get_text():
+        input_text = st.text_input("You: ", "How can I get in touch with startup incubators?", key="input")
+        return input_text
+    
+    user_input = get_text()
+
+    if user_input:
+        output = generate_response(user_input)
+        st.session_state.past.append(user_input)
+        st.session_state.generated.append(output)
+    
+    if st.session_state['generated']:
+        for i in range(len(st.session_state['generated'])):
+            message(st.session_state['past'][i], is_user=True, key=str(i) + '_user')
+            message(st.session_state['generated'][i], key=str(i))
+            
+
+
+elif selected_page == "Idea Oasis":
     # Render the Business Idea Generator page
     st.title("Business Idea Generator")
     # Add your code for the Business Idea Generator page here
 
-elif selected_page == "Stock Market Predictions Tool":
+elif selected_page == "EnvisionX":
     # Render the Stock Market Predictions Tool page
     st.title("Stock Market Predictions Tool")
     symbol = st.text_input("Enter a stock symbol (e.g., AAPL):")
