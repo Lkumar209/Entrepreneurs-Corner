@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
+from streamlit_option_menu import option_menu
 
 # Define the different pages
 pages = {
@@ -18,7 +19,19 @@ pages = {
 st.title("Entrepreneurship Corner")
 
 # Create a horizontal option menu for navigation
-selected_page = st.sidebar.selectbox("Select a feature:", list(pages.keys()))
+ 
+
+
+selected_page = option_menu(
+    menu_title=None,
+    options=["Startup Matchmaker", "Entrepreneurship Mentor Chatbot", "Business Idea Generator", "Stock Market Predictions Tool"],
+    icons=["map", "person-circle", "info", "geo"],
+    menu_icon="cast",
+    default_index=0,
+    orientation="horizontal",
+)
+
+
 
 # Render the selected page
 if selected_page == "Startup Matchmaker":
