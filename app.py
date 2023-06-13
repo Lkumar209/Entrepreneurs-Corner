@@ -88,7 +88,18 @@ if selected_page == "BizMatch":
     # Streamlit App
     def main():
         st.header("Investor-Founder Matching App")
-        page = st.sidebar.selectbox("Select a page", ("Investor Profile", "Startup Founder"))
+
+        page = option_menu(
+            menu_title=None,
+            options=["Investor Profile", "Startup Founder"],
+            icons=["map", "person-circle"],
+            menu_icon="cast",
+            default_index=0,
+            orientation="horizontal",
+            key="nav_bar"
+)
+        st.markdown("<br>", unsafe_allow_html=True)  # Add a line break
+
 
         if page == "Investor Profile":
             investor_profile()
