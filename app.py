@@ -192,16 +192,13 @@ elif selected_page == "BizBot":
     openai.api_key = "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"
 
     def generate_response(prompt):
-        completions = openai.Completion.create( 
-            engine = "text-davinci-003",
-            prompt =prompt,
-            max_tokens = 1024,
-            n = 1,
-            stop = None,
-            temperature = 0.5,
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}]
         )
-        message = completions.choices[0].text
-        return message
+        generated_text = response.choices[0].message.content
+
+        return generated_text
     
     st.header("BizBot - Your AI Business Assistant")
 
