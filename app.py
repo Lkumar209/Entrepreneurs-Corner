@@ -2,9 +2,10 @@ import streamlit as st
 import yfinance as yf
 import pandas as pd
 import matplotlib.pyplot as plt
-from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
+from datetime import datetime
 
 # Define the different pages
 pages = {
@@ -55,8 +56,8 @@ elif selected_page == "Stock Market Predictions Tool":
         y = data['Close'].values
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
         
-        # Train the linear regression model
-        model = LinearRegression()
+        # Train the Random Forest Regressor
+        model = RandomForestRegressor(n_estimators=100, random_state=0)
         model.fit(X_train, y_train)
         
         # Make predictions on the test set
@@ -66,11 +67,15 @@ elif selected_page == "Stock Market Predictions Tool":
         mse = mean_squared_error(y_test, y_pred)
         r2 = r2_score(y_test, y_pred)
         
+        # Convert ordinal dates to datetime format
+        plot_data = data.copy()
+        plot_data['Date'] = plot_data['Date'].map(lambda x: datetime.fromordinal(int(x)))
+        
         # Create a DataFrame for predicted values
-        predictions = pd.DataFrame({'Date': data['Date'].values[X_train.shape[0]:], 'Close': y_pred})
+        predictions = pd.DataFrame({'Date': plot_data['Date'].values[X_train.shape[0]:], 'Close': y_pred})
         
         # Create a combined DataFrame for plotting
-        plot_data = pd.concat([data, predictions], ignore_index=True)
+        plot_data = pd.concat([plot_data, predictions], ignore_index=True)
         
         # Generate the graph
         plt.figure(figsize=(10, 6))
