@@ -14,11 +14,13 @@ def investor_profile():
     name = st.text_input("Name")
     description = st.text_area("Description")
     funding = st.number_input("Funding Amount", min_value=0.0)
-    industry = st.text_input("Interested Industries")
+    interests = st.text_input("Interested Industries (comma-separated)")
     contact = st.text_input("Contact Information")
     if st.button("Submit"):
-        c.execute("INSERT INTO investors VALUES (?, ?, ?, ?, ?)",
-                  (name, description, funding, industry, contact))
+        interests_list = [interest.strip() for interest in interests.split(",")]
+        for interest in interests_list:
+            c.execute("INSERT INTO investors VALUES (?, ?, ?, ?, ?)",
+                      (name, description, funding, interest, contact))
         conn.commit()
         st.success("Profile submitted successfully!")
 
