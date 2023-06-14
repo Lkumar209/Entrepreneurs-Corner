@@ -198,7 +198,7 @@ if selected_page == "BizMatch":
 
 
 elif selected_page == "BizBot":
-    openai.api_key = "insert the key here !!!"
+    openai.api_key = "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"
 
     def generate_response(prompt):
         response = openai.ChatCompletion.create(
