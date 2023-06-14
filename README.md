@@ -1,5 +1,6 @@
 # Entrepreneurs-Corner
 
+<img width="1270" alt="Screen Shot 2023-06-13 at 8 10 25 PM" src="https://github.com/AlphaIdylSaythTG/Entrepreneurs-Corner/assets/123337877/f9aaa724-d2f2-405f-97aa-2635ae6e4dd0">
 
 
 The project consists of five main tabs that offer distinct functionalities. The "BizMatch" tab serves as an Investor-Founder Matching App, facilitating connections between investors and startup founders. It allows investors to create profiles, specifying their funding amounts, interests, and contact information. Startup founders can then input their industry and find matching investors based on shared interests. This tab streamlines the process of finding potential partners and fosters collaborations.
